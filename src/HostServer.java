@@ -29,7 +29,7 @@ public class HostServer {
             System.out.println("ATM connected from IP : " +atmIP);
             atmConnections.put(atmIP, clientSocket);
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            sendCommand("192.168.2.19", command);
+            sendCommand("192.168.2.5", command);
         }
 
     }
