@@ -13,8 +13,9 @@ import java.util.concurrent.Executors;
 public class HostServer {
     // Simpan koneksi aktif ATM: IP -> Socket
     private static Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
-    private static byte[] command = new byte[] { 0x31, 0x1C, 0x03, 0x1C, 0x1C, 0x33, 0x00, 0x00 };
-
+    private static byte[] command = new byte[] { 0x31, 0x1C, 0x03, 0x1C, 0x1C, 0x33, 0x00, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
+    //sesuai dengan urutan architecture
+    //itu message request
     public static void main(String[] args) throws IOException {
         int port = 6001;
         ServerSocket serverSocket = new ServerSocket(port);
@@ -29,7 +30,7 @@ public class HostServer {
             System.out.println("ATM connected from IP : " +atmIP);
             atmConnections.put(atmIP, clientSocket);
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            sendCommand("192.168.2.5", command);
+            sendCommand("192.168.2.19", command); //ini ip atm nya ya
         }
 
     }
