@@ -1,4 +1,3 @@
-
 import java.nio.charset.StandardCharsets;
 
 public class NDCParser {
@@ -17,6 +16,9 @@ public class NDCParser {
 //                break;
             case "22" :
                 parseSolicitedStatus(fields);
+//                break;
+            case "23" :
+                parseEncryptorInitialisationData(fields);
 //                break;
             case "3" :
                 parseAlertMessage(fields);
@@ -37,11 +39,93 @@ public class NDCParser {
         }
     }
 
+    private void parseEncryptorInitialisationData(String[] fields){
+        System.out.println("Message Class : " +fields[0].charAt(0));
+        System.out.println("Message Sub-Class : " + fields[0].charAt(1));
+        System.out.println("LUNO : " + fields[1]);
+        switch (fields[3]){
+            case "1" :
+                System.out.println("Information Identifier : EPP serial number and signature");
+                System.out.println("EPP Serial Number : " + fields[4].substring(0,8));
+                System.out.println("EPP Serial Number Signature : " + fields[4].substring(8,328));
+            case "2" :
+                System.out.println("Information Identifier : EPP public key and signature");
+                System.out.println("EPP Public Key (PK-EPP) : " + fields[4].substring(0,320));
+                System.out.println("EPP Public Key Signature : " + fields[4].substring(320,640));
+            case "3" :
+                System.out.println("Information Identifier : New Key Verification Value (KVV)");
+                System.out.println("New KKV for key : " + fields[4]);
+            case "4" :
+                System.out.println("Information Identifier : Keys status");
+                System.out.println("Master Key KVV : " + fields[4].substring(0,6));
+                System.out.println("Communication Key KVV : " +fields[4].substring(6,12));
+                System.out.println("MAC Key KVV : " + fields[4].substring(12,18));
+                System.out.println("B Key KVV : " + fields[4].substring(18,24));
+            case "5" :
+                System.out.println("Information Identifier : Key loaded");
+            case "6" :
+                System.out.println("Information Identifier : Key entry mode");
+                switch (fields[4]){
+                    case "1" -> System.out.println("Single length without XOR");
+                    case "2" -> System.out.println("Single length with XOR");
+                    case "3" -> System.out.println("Double length wih XOR");
+                    case "4" -> System.out.println("Double length, restricted");
+                }
+            case "7" :
+                System.out.println("Information Identifier : RSA encryption KVV");
+                System.out.println("Binary data length : " + fields[4]);
+            case "8" :
+                System.out.println("Information Identifier : SST certificate");
+                System.out.println("Binary data length : " + fields[4]);
+            case "9" :
+                System.out.println("Information Identifier : SST random number");
+                System.out.println("SST random number : " + fields[4]);
+            case "A" :
+                System.out.println("Information Identifier : PKCS7 key loaded");
+                System.out.println("KVV of new DES key : " + fields[4].substring(0,6));
+                System.out.println("Binary data length : " + fields[4].substring(6,9));
+            case "B" :
+                System.out.println("Information Identifier : Encryptor capabilities and state");
+                switch (fields[4].substring(0,2)){
+                    case "00" -> System.out.println("Remote Key Protocol : None");
+                    case "01" -> System.out.println("Remote Key Protocol : Signature");
+                    case "02" -> System.out.println("Remote Key Protocol : Certificate");
+                    case "03" -> System.out.println("Remote Key Protocol : Signature and certificate");
+                    case "04" -> System.out.println("Remote Key Protocol : Enhanced signature");
+                    case "06" -> System.out.println("Remote Key Protocol : Enhanced signature and certificate");
+                }
+                switch (fields[4].substring(2,3)){
+                    case "00" -> System.out.println("Cartificate state : Not ready or not supported");
+                    case "01" -> System.out.println("Certificate state : Certificate primary");
+                    case "02" -> System.out.println("Certificate state : Certificate secondary");
+                }
+                switch (fields[4].substring(4,6)){
+                    case "0" -> System.out.println("Variable length EPP serial numbers not supported");
+                    case "1" -> System.out.println("Variable length EPP serial numbers supported");
+                }
+            case "C" :
+                System.out.println("Information Identifier : Key deleted");
+            case "D" :
+                System.out.println("Information Identifier : EPP attributes");
+//                System.out.println("");
+            case "E" :
+                System.out.println("Information Identifier : Variable‐length EPP serial number and signature");
+        }
+
+
+    }
+
     private void parseEjData(String[] fields) {
         String[] subFields = fields[0].split("");
         System.out.println("Message Class : " + subFields[0]);
         System.out.println("Message Sub-Class : " + subFields[1]);
-        System.out.println("Machine Number : " + fields[1]);
+        System.out.println("Machine Number : " + fields[1].substring(0,6));
+        System.out.println("Date : " + fields[1].substring(6,12));
+        System.out.println("Time : " + fields[1].substring(12,18));
+        System.out.println("Last Char Previous Block : " + fields[1].substring(18,24));
+        System.out.println("Last Char This Block : " + fields[1].substring(24,30));
+        System.out.println("Block Length : " + fields[1].substring(30,33));
+
     }
 
     private void parseExitToHost(String[] fields) {
@@ -77,11 +161,13 @@ public class NDCParser {
             case "8": // Device Fault
                 parseDeviceFaultStatus(statusInformation);
                 break;
-            case "9": case "B": // Ready
+            case "9": //Ready
+                System.out.println("Status Information : Ready");
+            case "B": // Ready
                 parseReadyStatus(statusInformation);
                 break;
             case "A": // Command Reject
-                System.out.println("Status Information : - ");
+                System.out.println("Status Information : Command Reject");
                 break;
             case "C": // Specific Command Reject
                 parseSpecificCommandRejectStatus(statusInformation);
@@ -95,7 +181,7 @@ public class NDCParser {
 
     private void parseDeviceFaultStatus(String statusInformation) {
         String[] subStatusInformation = statusInformation.split("\u001C");
-        System.out.println("Device Identifier Graphic : " + subStatusInformation[0].substring(0,1));
+        System.out.println("Device Identifier Graphic : " + subStatusInformation[0].charAt(0));
         System.out.println("Transaction Status : " + subStatusInformation[0].substring(1,18));
         String errorSeverity = subStatusInformation[1];
         switch (errorSeverity){
@@ -111,18 +197,14 @@ public class NDCParser {
         String[] subStatusInformation = statusInformation.split("\u001C");
         System.out.println("Ready Status");
         System.out.println("Transaction Serial Number (TSN) :" + subStatusInformation[0]);
-        if(subStatusInformation[1].equals("1")){
+        if (subStatusInformation[1].equals("1")) {
             System.out.println("Data Identifier : Recycle Cassette Deposit Data");
-        }else if(subStatusInformation[1].equals("2")){
+        } else if (subStatusInformation[1].equals("2")) {
             System.out.println("Data Identifier : Recycle Cassette Dispense Data");
-        }else{
+        } else {
             System.out.println("Data Identifier : -");
         }
     }
-
-//    private void parseCommandRejectStatus(String statusInformation) {
-//
-//    }
 
     private void parseSpecificCommandRejectStatus(String statusInformation) {
         System.out.println("Specific Command Reject Status");
@@ -226,8 +308,37 @@ public class NDCParser {
                 System.out.println("Advanced NDC Release Number : " + subStatusInformation[5]);
                 System.out.println("Advanced NDC Software ID : " + subStatusInformation[6]);
             case "2" : //send supply counters
+                System.out.println("Message Identifier : " + statusValue);
+                System.out.println("Transaction Serial Number (TSN) : " + subStatusInformation[0].substring(1,5));
+                System.out.println("Accumulated Transaction Count : " + subStatusInformation[0].substring(5,12));
+                System.out.println("Notes In Cassettes : " + subStatusInformation[0].substring(12,32));
+                System.out.println("Notes Rejected : " + subStatusInformation[0].substring(32,52));
+                System.out.println("Notes Dispensed : " + subStatusInformation[0].substring(52,72));
+                System.out.println("Last Transaction Notes Dispensed : " + subStatusInformation[0].substring(72,92));
+                System.out.println("Cards Captured : " + subStatusInformation[0].substring(92,97));
+                System.out.println("Envelopes Deposited : " + subStatusInformation[0].substring(97,102));
+                System.out.println("Camera Film Remaining : " + subStatusInformation[0].substring(102,107));
+                System.out.println("Last Envelope Serial Number : " + subStatusInformation[0].substring(107,112));
             case "3" : //send tally information (unsupported)
+                System.out.println("Message Identifier : " +statusValue);
+                System.out.println("Group Number : " + subStatusInformation[0].charAt(1));
+                System.out.println("Year : " + subStatusInformation[0].substring(1,3));
+                System.out.println("Month : " + subStatusInformation[0].substring(3,5));
+                System.out.println("Day : " + subStatusInformation[0].substring(5,7));
+                System.out.println("Hour : " + subStatusInformation[0].substring(7,9));
+                System.out.println("Minute : " + subStatusInformation[0].substring(9,11));
+                System.out.println("Second : " + subStatusInformation[0].substring(11,13));
+                System.out.println("Tally Data : " + subStatusInformation[0].substring(13,19));
             case "4" : //send error log information (unsupported)
+                System.out.println("Message Identifier : " +statusValue);
+                System.out.println("Group Number : " +subStatusInformation[0].charAt(1));
+                System.out.println("New Entries : " + subStatusInformation[0].substring(1,3));
+                System.out.println("Year : " + subStatusInformation[0].substring(3,5));
+                System.out.println("Month : " + subStatusInformation[0].substring(5,7));
+                System.out.println("Day : " + subStatusInformation[0].substring(7,9));
+                System.out.println("Hour : " + subStatusInformation[0].substring(9,11));
+                System.out.println("Minute : " + subStatusInformation[0].substring(11,13));
+                System.out.println("Second : " + subStatusInformation[0].substring(13,15));
             case "5" : //send date/time information
                 System.out.println("Message Identifier :" +statusValue);
                 String ToDClockStatus = subStatusInformation[0].substring(1,2);
@@ -248,17 +359,23 @@ public class NDCParser {
             case "F" : //EKC retrieve hallmark key (unsupported)
             case "H" : //Hardware configuration data
                 System.out.println("Message Identifier : " + statusValue);
-                System.out.println("Configuration ID Identifier : " +subStatusInformation[0].substring(1,2));
+                System.out.println("Configuration ID Identifier : " +subStatusInformation[0].charAt(1));
                 System.out.println("Configuration ID : " + subStatusInformation[0].substring(2,6));
                 System.out.println("Product Class : " +subStatusInformation[1]);
                 System.out.println();
             case "I" : //Supplies data
                 System.out.println("Message Identifier :");
             case "J" : //Fitness data
+                System.out.println("Message Identifier : " + statusValue);
+                System.out.println("Hardware Fitness Identifier : " + subStatusInformation[0].charAt(1));
             case "K" : //tamper and sensor status data
+                System.out.println("Message Identifier : " +statusValue);
             case "L" : //software ID and release number data
+                System.out.println("Message Identifier : " +statusValue);
             case "M" : //local configuration option digits
+                System.out.println("Message Identifier : " +statusValue);
             case "N" : //send note definitions (BNA)
+
         }
     }
 
@@ -269,20 +386,6 @@ public class NDCParser {
         System.out.println("Message Sub Class : " + subFields[1]);
         System.out.println("LUNO : " + fields[1]);
         System.out.println("Status Information : " + fields[2]);
-    }
-
-    private String getDescriptor(String field) {
-
-        switch (field){
-            case "8": return field + "-DeviceFault";
-            case "9": return field + "-Ready";
-            case "A": return field + "-CommandReject";
-            case "B": return field + "-Ready";
-            case "C": return field + "-SpesificCommandReject";
-            case "F": return field + "-TerminalState";
-            default:
-                throw new IllegalStateException("Unexpected value: " + field);
-        }
     }
 
     private void parseTransactionRequest(String[] fields) {

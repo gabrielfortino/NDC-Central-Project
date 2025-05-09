@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class HostServer {
     // Simpan koneksi aktif ATM: IP -> Socket
     private static Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
-    private static byte[] command = new byte[] { 0x31, 0x1C, 0x03, 0x1C, 0x1C, 0x33, 0x00, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
+    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
     //sesuai dengan urutan architecture
     //itu message request
     public static void main(String[] args) throws IOException {
@@ -30,9 +30,8 @@ public class HostServer {
             System.out.println("ATM connected from IP : " +atmIP);
             atmConnections.put(atmIP, clientSocket);
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            sendCommand("192.168.2.19", command); //ini ip atm nya ya
+            sendCommand(atmIP, command); //ini ip atm nya ya
         }
-
     }
 
     private static void sendCommand(String atmIP, byte[] command){
@@ -52,6 +51,10 @@ public class HostServer {
         }
     }
 
+    private static void loadDataTable(String atmIP, byte[] command){
+
+    }
+
     private static void handleATMConnection(String atmIP, Socket socket) {
         try (
                 InputStream in = socket.getInputStream();
@@ -63,7 +66,7 @@ public class HostServer {
 
             while ((read = in.read(buffer)) != -1) {
                 // Tampilkan pesan dari ATM
-                System.out.print("From ATM " + atmIP + ": ");
+                System.out.println("From ATM " + atmIP + ": ");
                 for (int i = 0; i < read; i++) {
                     System.out.printf("%02X ", buffer[i]);
                     ndcParser.messageParser(buffer);
