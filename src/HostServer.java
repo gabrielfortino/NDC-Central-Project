@@ -13,11 +13,16 @@ import java.util.concurrent.Executors;
 public class HostServer {
     // Simpan koneksi aktif ATM: IP -> Socket
     private static Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
-    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
+//    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
+//    private static byte[] commandconfigurationparameterload = new byte[] {0x34, 0x37, 0x33, 0x33, 0x30, 0x30, 0x31, 0x33, 0x31, 0x30, 0x30, 0x30, 0x30,
+//            0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+//            0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x33, 0x30, 0x30, 0x30, 0x37, 0x30,
+//            0x35, 0x30 };
     //sesuai dengan urutan architecture
     //itu message request
     public static void main(String[] args) throws IOException {
         int port = 6001;
+        MessageSender Sender = new MessageSender();
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("SERVER STARTED, ATM HOST SERVER LISTENING ON PORT : " + port);
 
@@ -30,7 +35,10 @@ public class HostServer {
             System.out.println("ATM connected from IP : " +atmIP);
             atmConnections.put(atmIP, clientSocket);
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            sendCommand(atmIP, command); //ini ip atm nya ya
+            byte [] commandrequestconfigid = Sender.requestConfigIDMessage();
+            sendCommand(atmIP, commandrequestconfigid); //ini ip atm nya ya
+            byte [] commandconfigurationparameterload = Sender.configurationParameterLoadMessage();
+            sendCommand(atmIP, commandconfigurationparameterload);
         }
     }
 
