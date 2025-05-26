@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 
 public class HostServer {
     // Simpan koneksi aktif ATM: IP -> Socket
-    private static Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
+    private static final Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
 //    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
 //    private static byte[] commandconfigurationparameterload = new byte[] {0x34, 0x37, 0x33, 0x33, 0x30, 0x30, 0x31, 0x33, 0x31, 0x30, 0x30, 0x30, 0x30,
 //            0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
@@ -23,21 +23,35 @@ public class HostServer {
     public static void main(String[] args) throws IOException {
         int port = 6001;
         ServerSocket serverSocket = new ServerSocket(port);
+
         System.out.println("SERVER STARTED, ATM HOST SERVER LISTENING ON PORT : " + port);
 
         // Thread pool buat handle banyak ATM
         ExecutorService executor = Executors.newCachedThreadPool();
 
         while (true){
+            System.out.println("Waiting for ATM connection...");
             Socket clientSocket = serverSocket.accept();
+
+            clientSocket.setKeepAlive(true);
+            clientSocket.setSoTimeout(10000); // Set timeout 10 detik
+
             String atmIP = clientSocket.getInetAddress().getHostAddress();
             System.out.println("ATM connected from IP : " +atmIP);
+            if (atmConnections.containsKey(atmIP)) {
+                try {
+                    atmConnections.get(atmIP).close();
+                } catch (IOException e) {
+                    System.out.println("Failed to close previous socket for " + atmIP);
+                }
+            }
             atmConnections.put(atmIP, clientSocket);
+
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            byte [] commandrequestconfigid = MessageSender.requestConfigIDMessage();
-            sendCommand(atmIP, commandrequestconfigid); //ini ip atm nya ya
-            byte [] commandconfigurationparameterload = MessageSender.configurationParameterLoadMessage();
-            sendCommand(atmIP, commandconfigurationparameterload);
+            byte [] commandRequestConfigId = MessageSender.requestConfigIDMessage();
+            sendCommand(atmIP, commandRequestConfigId); //ini ip atm nya ya
+            byte [] commandConfigurationParameterLoad = MessageSender.configurationParameterLoadMessage();
+            sendCommand(atmIP, commandConfigurationParameterLoad);
         }
     }
 
