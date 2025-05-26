@@ -22,7 +22,6 @@ public class HostServer {
     //itu message request
     public static void main(String[] args) throws IOException {
         int port = 6001;
-        MessageSender Sender = new MessageSender();
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("SERVER STARTED, ATM HOST SERVER LISTENING ON PORT : " + port);
 
@@ -35,9 +34,9 @@ public class HostServer {
             System.out.println("ATM connected from IP : " +atmIP);
             atmConnections.put(atmIP, clientSocket);
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
-            byte [] commandrequestconfigid = Sender.requestConfigIDMessage();
+            byte [] commandrequestconfigid = MessageSender.requestConfigIDMessage();
             sendCommand(atmIP, commandrequestconfigid); //ini ip atm nya ya
-            byte [] commandconfigurationparameterload = Sender.configurationParameterLoadMessage();
+            byte [] commandconfigurationparameterload = MessageSender.configurationParameterLoadMessage();
             sendCommand(atmIP, commandconfigurationparameterload);
         }
     }
@@ -57,10 +56,6 @@ public class HostServer {
         } else {
             System.out.println("ATM not connected: " + atmIP);
         }
-    }
-
-    private static void loadDataTable(String atmIP, byte[] command){
-
     }
 
     private static void handleATMConnection(String atmIP, Socket socket) {
