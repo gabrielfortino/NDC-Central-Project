@@ -178,7 +178,6 @@ public class NDCParser {
         }
         System.out.println("Message Authentication Code (MAC) Data : " + fields[5]);
     }
-
     private void parseDeviceFaultStatus(String statusInformation) {
         String[] subStatusInformation = statusInformation.split("\u001C");
         System.out.println("Device Identifier Graphic : " + subStatusInformation[0].charAt(0));
@@ -386,7 +385,266 @@ public class NDCParser {
         System.out.println("Message Sub Class : " + subFields[1]);
         System.out.println("LUNO : " + fields[1]);
         System.out.println("Status Information : " + fields[2]);
+        String[] StatusInformationField = fields[2].split("\u001C");
+        String deviceIdentifierGraphic = StatusInformationField[0].substring(0,1);
+        switch (deviceIdentifierGraphic){
+            case "A" :
+                System.out.println("Time of Day Clock Status");
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+                String deviceStatus = StatusInformationField[0].substring(1,2);
+                switch (deviceStatus){
+                    case "1" :
+                        System.out.println("Device Status : (" + deviceStatus + ") Clock reset but running");
+                    case "2" :
+                        System.out.println("Device Status : (" + deviceStatus + ") Clock has stopped");
+                }
+                String errorSeverity = StatusInformationField[1];
+                switch (errorSeverity){
+                    case "2" :
+                        System.out.println("Error Severity : (" + errorSeverity + ") Warning");
+                    case "4" :
+                        System.out.println("Error Severity : (" + errorSeverity + ") Fatal");
+                }
+            case "B" :
+                System.out.println("Power Failure Status");
+                System.out.println("Device Identifier : " + deviceIdentifierGraphic);
+                System.out.println("Config ID : " +StatusInformationField[0].substring(1,5));
+            case "D" :
+                System.out.println("Card Reader/Writer Status");
+                System.out.println("Device Identifier : " + deviceIdentifierGraphic);
+                String transactionStatus = StatusInformationField[0].substring(1,2);
+                switch (transactionStatus){
+                    case "0" :
+                        System.out.println(transactionStatus + " :  No transaction exception condition occurred but consult other fields for error severity, diagnostic status or supplies status changes.");
+                    case "1" :
+                        System.out.println(transactionStatus + " : The cardholder did not take his card within the allowed time and it was captured or jammed.");
+                    case "2" :
+                        System.out.println(transactionStatus + " : The mechanism failed to eject the card, which was either captured or jammed.");
+                    case "3" :
+                        System.out.println(transactionStatus + " : The mechanism failed to update the requested tracks on the card.");
+                    case "4" :
+                        System.out.println(transactionStatus + " : Invalid track data received from Central.");
+                    case "7" :
+                        System.out.println(transactionStatus + " : Error in track data.");
+                }
+                errorSeverity = StatusInformationField[1];
+                switch (errorSeverity){
+                    case "2" :
+                        System.out.println("Error Severity : (" + errorSeverity + ") Warning");
+                    case "4" :
+                        System.out.println("Error Severity : (" + errorSeverity + ") Fatal");
+                }
+                System.out.println("Diagnostic Status : " + StatusInformationField[2]);
+                String suppliesStatus = StatusInformationField[3];
+                switch (suppliesStatus){
+                    case "0" :
+                        System.out.println(suppliesStatus + " : No new state");
+                    case "1" :
+                        System.out.println(suppliesStatus + " : No overfill condition (capture bin)");
+                    case "4" :
+                        System.out.println(suppliesStatus + " : Overfill condition (capture bin)");
+                }
+            case "E" :
+                System.out.println("Cash Handler");
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+                deviceStatus = StatusInformationField[0].substring(1,2);
+                switch (deviceStatus){
+                    case "0" :
+                        System.out.println(deviceStatus + " : Successful operation, but an exception has occured as detailed in subsequent fields");
+                    case "1" :
+                        System.out.println(deviceStatus + " : Short dispense. For a spray dispenser, this can also indicate that an extra note has been dispensed.");
+                    case "2" :
+                        System.out.println(deviceStatus + " : No notes dispensed");
+                    case "3" :
+                        System.out.println(deviceStatus + " : Notes dispensed unknown. The cardholder may have had access to any presented notes, so it should be assumed some may have been dispensed. Intervention may be required to reconcile the cash amount totals. The following counts contain requested dispense values.");
+                    case "4" :
+                        System.out.println(deviceStatus + " : No notes dispensed or card not ejected. This status is returned on a card before cash transaction if the stack operation fails and the notes are purged prior to card eject.");
+                    case "5" :
+                        System.out.println(deviceStatus + " : Some notes have been retracted when the notes were not taken following a Present time‐out. The number of notes retracted is unknown");
+                }
+
+
+            case "F" :
+                System.out.println("Depository");
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+                deviceStatus = StatusInformationField[0].substring(1,2);
+                switch (deviceStatus){
+                    case "0" :
+                        System.out.println(deviceStatus + " : Successful operation, but an exception has occurred as detailed in subsequent fields.");
+                    case "1" :
+                        System.out.println(deviceStatus + " : Time-out on cardholder deposit.");
+                    case "2" :
+                        System.out.println(deviceStatus + " : Failure to enable mechanism for a deposit.");
+                    case "3" :
+                        System.out.println(deviceStatus + " : Envelope/document jam or envelope/document deposit failed. The cardholder has access. This status is also returned if there is any doubt about cardholder access.");
+                    case "4" :
+                        System.out.println(deviceStatus + " : Envelope/document jam or envelope/document deposit failed. The cardholder does not have access.");
+                }
+                System.out.println("Error Severity : " + StatusInformationField[1]);
+                System.out.println("Diagnostic Status : " + StatusInformationField[2]);
+                suppliesStatus = StatusInformationField[3];
+                switch (suppliesStatus){
+                    case "0" :
+                        System.out.println(suppliesStatus + " : No envelope deposited");
+                    case "1" :
+                        System.out.println(suppliesStatus + " : No overfill condition");
+                    case "4" :
+                        System.out.println(suppliesStatus + " : Overfill detected");
+                }
+            case "G" :
+                System.out.println("Receipt Printer");
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+                
+            case "H" :
+            case "K" :
+            case "L" :
+            case "M" :
+            case "P" :
+                System.out.println("Sensors");
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+                deviceStatus = StatusInformationField[0].substring(1,2);
+                switch (deviceStatus){
+                    case "1" :
+                        System.out.println(deviceStatus + " : IT sensor change");
+                        switch (StatusInformationField[0].substring(2,3)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(2,3) + " : Supervisor mode inactive");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(2,3) + " : Supervisor mode active");
+                        }
+                        switch (StatusInformationField[0].substring(3,4)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(3,4) + " : Vibration and/or heat sensor inactive");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(3,4) + " : Vibration and/or heat sensor active");
+                        }
+                        switch (StatusInformationField[0].substring(4,5)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(4,5) + " : Door contact sensor inactive");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(4,5) + " : Door contact sensor active");
+                        }
+                        switch (StatusInformationField[0].substring(5,6)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(5,6) + " : Silent signal sensor inactive");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(5,6) + " : Silent signal sensor active");
+                        }
+                        switch (StatusInformationField[0].substring(6,7)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(6,7) + " : Electronics enclosure sensor inactive");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(6,7) + " : Electronics enclosure sensor active");
+                        }
+                        switch (StatusInformationField[0].substring(7,8)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(7,8) + " : Deposit bin out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(7,8) + " : Deposit bin in");
+                        }
+                        switch (StatusInformationField[0].substring(8,9)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(8,9) + " : Card bin out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(8,9) + " : Card bin in");
+                        }
+                        switch (StatusInformationField[0].substring(9,10)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(9,10) + " : Currency reject bin out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(9,10) + " : Currency reject bin in");
+                        }
+                        switch (StatusInformationField[0].substring(10,11)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(10,11) + " : Currency cassette in position 1 (top) out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(10,11) + " : Currency cassette in position 1 (top) in");
+                        }
+                        switch (StatusInformationField[0].substring(11,12)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(11,12) + " : Currency cassette in position 2 (second) out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(11,12) + " : Currency cassette in position 2 (second) in");
+                        }
+                        switch (StatusInformationField[0].substring(12,13)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(12,13) + " : Currency cassette in position 3 (third) out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(12,13) + " : Currency cassette in position 3 (third) in");
+                        }
+                        switch (StatusInformationField[0].substring(13,14)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(13,14) + " : Currency cassette in position 4 (bottom) out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(13,14) + " : Currency cassette in position 4 (bottom) in");
+                        }
+                        switch (StatusInformationField[0].substring(14,15)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(14,15) + " : Coin dispenser out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(14,15) + " : Coin dispenser in");
+                        }
+                        switch (StatusInformationField[0].substring(15,16)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(15,16) + " : Coin dispenser hopper 1 out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(15,16) + " : Coin dispenser hopper 1 in");
+                        }
+                        switch (StatusInformationField[0].substring(16,17)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(16,17) + " : Coin dispenser hopper 2 out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(16,17) + " : Coin dispenser hopper 2 in");
+                        }
+                        switch (StatusInformationField[0].substring(17,18)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(17,18) + " : Coin dispenser hopper 3 out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(17,18) + " : Coin dispenser hopper 3 in");
+                        }
+                        switch (StatusInformationField[0].substring(18,19)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(18,19) + " : Coin dispenser hopper 4 out");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(18,19) + " : Coin dispenser hopper 4 in");
+                        }
+                        switch (StatusInformationField[0].substring(19,20)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(19,20) + " : CPM pockets open");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(19,20) + " : CPM pockets closed");
+                        }
+                    case "2" :
+                        System.out.println(deviceStatus + " : Mode change");
+                        switch (StatusInformationField[0].substring(2,3)){
+                            case "0" :
+                                System.out.println(StatusInformationField[0].substring(2,3) + " : Supervisor mode exit");
+                            case "1" :
+                                System.out.println(StatusInformationField[0].substring(2,3) + " : Supervisor mode entry");
+                        }
+                        if (StatusInformationField[0].substring(3,4) != null || StatusInformationField[0].substring(3,4) != "0"){
+                            System.out.println(StatusInformationField[0].substring(3,4) + " : Simulated Supervisor mode entry/exit during AER (if configured through the registry)");
+                        }
+                    case "3" :
+                        System.out.println(deviceStatus + " : Alarm state change");
+                    case "5" :
+                        System.out.println(deviceStatus + " : Full TI and full alarms change detected");
+                    case "6" :
+                        System.out.println(deviceStatus + " : Flexible TI and alarms change detected");
+                }
+                System.out.println("Error Severity : " + StatusInformationField[1]);
+                System.out.println("Diagnostic Status : " + StatusInformationField[2]);
+                suppliesStatus = StatusInformationField[3];
+            case "Q" :
+            case "R" :
+            case "S" :
+            case "V" :
+            case "a" :
+            case "w" :
+            case "\\" :
+        }
     }
+
 
     private void parseTransactionRequest(String[] fields) {
         String[] subFields = fields[0].split("");
