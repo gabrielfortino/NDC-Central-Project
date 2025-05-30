@@ -13,6 +13,9 @@ public class MessageSender {
                 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x33, 0x30, 0x30, 0x30, 0x37, 0x30,
                 0x35, 0x30};
     }
+    public static byte[] stateTableLoadMessage(){
+        return new byte[]{};
+    }
 
     // Add more functions here as needed
 }
