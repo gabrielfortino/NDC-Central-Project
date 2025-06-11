@@ -830,64 +830,30 @@ public class NDCParser {
                 System.out.println("Diagnostic Status : " + StatusInformationField[2]);
             case "R" :
                 System.out.println("Supervisor Keys Status");
-                System.out.println("Device Identifier : " + deviceIdentifierGraphic);
-                String optionDigit0Value = "1";
+                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
 
-                String e2_deviceStatusFull = StatusInformationField[0];
-                System.out.println("Raw Device Status (e2) : " + e2_deviceStatusFull);
-                System.out.println("Interpreting based on Option Digit 0 = '" + optionDigit0Value + "'");
+                String optionDigitValue = "1";
 
-                if (optionDigit0Value.equals("0")) {
-                    if (e2_deviceStatusFull != null && e2_deviceStatusFull.length() >= 2) {
-                        String keySelection = e2_deviceStatusFull.substring(0, 2);
-                        System.out.println("Key selection from Select menu ('00'-'98') : " + keySelection);
-                    } else {
-                        System.out.println("Invalid e2_deviceStatusFull length for Option Digit 0 = '0'. Expected 2 chars.");
-                    }
-                } else if (optionDigit0Value.equals("1")) {
-                    if (e2_deviceStatusFull != null && e2_deviceStatusFull.length() >= 3) {
-                        String menuCode = e2_deviceStatusFull.substring(0, 1);
-                        String menuItem = e2_deviceStatusFull.substring(1, 3);
-                        System.out.print("Menu (" + menuCode + ") : ");
-                        printMenuDescription(menuCode);
-                        System.out.println("Menu item selected ('00'-'98') : " + menuItem);
-                    } else {
-                        System.out.println("Invalid e2_deviceStatusFull length for Option Digit 0 = '1'. Expected 3 chars.");
-                    }
-                } else if (optionDigit0Value.equals("2") || (optionDigit0Value.compareTo("3") > 0 && optionDigit0Value.matches("\\d+"))) {
-                    if (e2_deviceStatusFull != null && e2_deviceStatusFull.length() >= 5) {
-                        String menuCode = e2_deviceStatusFull.substring(0, 1);
-                        String menuItem = e2_deviceStatusFull.substring(1, 3);
-                        String subMenuItem = e2_deviceStatusFull.substring(3, 5);
-                        System.out.print("Menu (" + menuCode + ") : ");
-                        printMenuDescription(menuCode);
-                        System.out.println("Menu item selected ('00'-'98') : " + menuItem);
-                        System.out.println("Item selected from a sub-menu ('00'-'98') : " + subMenuItem + " (e.g., Key Entry menu)");
-                        if (optionDigit0Value.compareTo("3") > 0) {
-                            System.out.println("(Option Digit 0 was '" + optionDigit0Value + "', treated as '2'. Component selections not reported.)");
-                        }
-                    } else {
-                        System.out.println("Invalid e2_deviceStatusFull length for Option Digit 0 = '" + optionDigit0Value + "'. Expected 5 chars.");
-                    }
-                } else if (optionDigit0Value.equals("3")) {
-                    if (e2_deviceStatusFull != null && e2_deviceStatusFull.length() >= 7) {
-                        String menuCode = e2_deviceStatusFull.substring(0, 1);
-                        String menuItem = e2_deviceStatusFull.substring(1, 3);
-                        String subMenuItem = e2_deviceStatusFull.substring(3, 5);
-                        String optionItem = e2_deviceStatusFull.substring(5, 7);
-                        System.out.print("Menu (" + menuCode + ") : ");
-                        printMenuDescription(menuCode);
-                        System.out.println("Menu item selected ('00'-'98') : " + menuItem);
-                        System.out.println("Item selected from a sub-menu ('00'-'98') : " + subMenuItem);
-                        System.out.println("Item selected from the options ('00'-'98') : " + optionItem + " (e.g., component selection)");
-                    } else {
-                        System.out.println("Invalid e2_deviceStatusFull length for Option Digit 0 = '3'. Expected 7 chars.");
-                    }
-                } else {
-                    System.out.println("Unknown or unsupported Option Digit 0 value: " + optionDigit0Value);
+                String deviceStatusFull = "";
+                int expectedCharsForE2 = 0;
+
+                if (optionDigitValue.equals("0")){
+                    expectedCharsForE2 = 2;
+                }else if (optionDigitValue.equals("1")){
+                    expectedCharsForE2 = 3;
+                }else if (optionDigitValue.equals("2") || (optionDigitValue.compareTo("3") > 0 && optionDigitValue.matches("\\d+"))) {
+                    expectedCharsForE2 = 5;
+                }else if (optionDigitValue.equals("3")) {
+                    expectedCharsForE2 = 7;
                 }
 
-                System.out.println("Fields e3, e4, e5 are not applicable for Supervisor Keys Status as per Table 9-50.");
+                if(expectedCharsForE2 > 0){
+                    if (StatusInformationField != null && StatusInformationField.length >= expectedCharsForE2) {
+                        StringBuilder sb_e2 = new StringBuilder();
+
+
+                    }
+                }
             case "S" :
                 System.out.println("Cardholder Display Alarm");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
