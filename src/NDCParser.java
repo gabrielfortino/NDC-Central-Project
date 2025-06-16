@@ -829,31 +829,31 @@ public class NDCParser {
                 }
                 System.out.println("Diagnostic Status : " + StatusInformationField[2]);
             case "R" :
-                System.out.println("Supervisor Keys Status");
-                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+//                System.out.println("Supervisor Keys Status");
+//                System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
+//
+//                String optionDigitValue = "1";
+//
+//                String deviceStatusFull = "";
+//                int expectedCharsForE2 = 0;
+//
+//                if (optionDigitValue.equals("0")){
+//                    expectedCharsForE2 = 2;
+//                }else if (optionDigitValue.equals("1")){
+//                    expectedCharsForE2 = 3;
+//                }else if (optionDigitValue.equals("2") || (optionDigitValue.compareTo("3") > 0 && optionDigitValue.matches("\\d+"))) {
+//                    expectedCharsForE2 = 5;
+//                }else if (optionDigitValue.equals("3")) {
+//                    expectedCharsForE2 = 7;
+//                }
+//
+//                if(expectedCharsForE2 > 0){
+//                    if (StatusInformationField != null && StatusInformationField.length >= expectedCharsForE2) {
+//                        StringBuilder sb_e2 = new StringBuilder();
 
-                String optionDigitValue = "1";
 
-                String deviceStatusFull = "";
-                int expectedCharsForE2 = 0;
-
-                if (optionDigitValue.equals("0")){
-                    expectedCharsForE2 = 2;
-                }else if (optionDigitValue.equals("1")){
-                    expectedCharsForE2 = 3;
-                }else if (optionDigitValue.equals("2") || (optionDigitValue.compareTo("3") > 0 && optionDigitValue.matches("\\d+"))) {
-                    expectedCharsForE2 = 5;
-                }else if (optionDigitValue.equals("3")) {
-                    expectedCharsForE2 = 7;
-                }
-
-                if(expectedCharsForE2 > 0){
-                    if (StatusInformationField != null && StatusInformationField.length >= expectedCharsForE2) {
-                        StringBuilder sb_e2 = new StringBuilder();
-
-
-                    }
-                }
+//                    }
+//                }
             case "S" :
                 System.out.println("Cardholder Display Alarm");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);

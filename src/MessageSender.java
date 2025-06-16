@@ -15,6 +15,20 @@ public class MessageSender {
 //                0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
 //                0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x33, 0x30, 0x30, 0x30, 0x37, 0x30,
 //                0x35, 0x30
+//        };
+//                0x02,
+//                0x33, // Message Class '3'
+//                0x1C, // Field Separator
+//                0x1C, // Field Separator (for empty LUNO/Seq No.)
+//                0x1C, // Field Separator
+//                0x31, // Message Sub-Class '1'
+//                0x33, // Message Identifier '3'
+//                0x1C, // Field Separator
+//                0x31, 0x32, 0x33, // Data: LUNO to set ('123')
+//                0x1C, // Field Separator
+//                0x30, 0x30, // Data: Timer Number '00'
+//                0x30, 0x32, 0x35, // Data: Timer Value '025' (25 * 800ms = 20 seconds)
+//                0x00
     }
     public static byte[] stateTableLoadMessage(){
         return new byte[]{
