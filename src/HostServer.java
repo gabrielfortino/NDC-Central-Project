@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class HostServer {
     // Simpan koneksi aktif ATM: IP -> Socket
     private static final Map<String, Socket> atmConnections = new ConcurrentHashMap<>();
-//    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
+    //    private static byte[] command = new byte[] { 0x02, 0x31, 0x1C, 0x33, 0x30, 0x30, 0x1C, 0x1C, 0x33, 0x00 }; //coba cari message sesuai spec untuk di send ke atm
 //    private static byte[] commandconfigurationparameterload = new byte[] {0x34, 0x37, 0x33, 0x33, 0x30, 0x30, 0x31, 0x33, 0x31, 0x30, 0x30, 0x30, 0x30,
 //            0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
 //            0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x33, 0x30, 0x30, 0x30, 0x37, 0x30,
@@ -48,10 +48,14 @@ public class HostServer {
             atmConnections.put(atmIP, clientSocket);
 
             executor.submit(() -> handleATMConnection(atmIP,clientSocket));
+            byte [] commandGoInService = MessageSender.goInServiceMessage();
+            sendCommand(atmIP, commandGoInService); //ini ip atm nya ya
             byte [] commandRequestConfigId = MessageSender.requestConfigIDMessage();
             sendCommand(atmIP, commandRequestConfigId); //ini ip atm nya ya
             byte [] commandConfigurationParameterLoad = MessageSender.configurationParameterLoadMessage();
             sendCommand(atmIP, commandConfigurationParameterLoad);
+            byte [] commandconfigurationIDNumberLoad = MessageSender.configurationIDNumberLoadMessage();
+            sendCommand(atmIP, commandconfigurationIDNumberLoad);
         }
     }
 

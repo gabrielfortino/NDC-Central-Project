@@ -10,32 +10,32 @@ public class NDCParser {
         switch (fields[0]){
             case "11" :
                 parseTransactionRequest(fields);
-//                break;
+                break;
             case "12" :
                 parseUnsolicitedStatus(fields);
-//                break;
+                break;
             case "22" :
                 parseSolicitedStatus(fields);
-//                break;
+                break;
             case "23" :
                 parseEncryptorInitialisationData(fields);
-//                break;
+                break;
             case "3" :
                 parseAlertMessage(fields);
-//                break;
+                break;
             case "41":
                 //Software Management Status Message(NDC+ Only)
                 parseSoftwareManagement(fields);
-//                break;
+                break;
             case "51":
                 parseExitToHost(fields);
-//                break;
+                break;
             case "61":
                 parseEjData(fields);
-//                break;
+                break;
             case "1":
                 parseTerminalCommands(fields);
-//                break;
+                break;
         }
     }
 
@@ -861,35 +861,48 @@ public class NDCParser {
                 switch (StatusInformationField[1]){
                     case "0" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : No error/not supported");
+                        break;
                     case "4" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : Fatal");
+                        break;
                 }
+                break;
             case "V" :
                 System.out.println("Statement Printer");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
                 switch (deviceStatus){
                     case "0" :
                         System.out.println(deviceStatus + " : No transaction error condition");
+                        break;
                     case "1" :
                         System.out.println(deviceStatus + " : Print/cut not successful");
+                        break;
                     case "2" :
                         System.out.println(deviceStatus + " : Device not configured");
+                        break;
                     case "3" :
                         System.out.println(deviceStatus + " : Statement present in transport");
+                        break;
                     case "4" :
                         System.out.println(deviceStatus + " : Cardholder pressed Cancel during a 'print statement and wait' function");
+                        break;
                 }
                 switch (errorSeverity){
                     case "0" :
                         System.out.println("Error Severity (" + errorSeverity + ") : No error/not supported");
+                        break;
                     case "1" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Routine error");
+                        break;
                     case "2" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Warning");
+                        break;
                     case "3" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Suspend");
+                        break;
                     case "4" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Fatal");
+                        break;
                 }
                 System.out.println("Diagnostic Status : " + StatusInformationField[2]);
                 String printerPaperStatusV = StatusInformationField[3].substring(0,1);
@@ -901,41 +914,56 @@ public class NDCParser {
                 switch (printerPaperStatusV){
                     case "1" :
                         System.out.println("Printer Paper Status (" + printerPaperStatusV + ") : Sufficient paper");
+                        break;
                     case "2" :
                         System.out.println("Printer Paper Status (" + printerPaperStatusV + ") : Paper low");
+                        break;
                     case "3" :
                         System.out.println("Printer Paper Status (" + printerPaperStatusV + ") : Paper exhausted");
+                        break;
                 }
                 switch (paperRibbonStatusV){
                     case "1" :
                         System.out.println("Paper Ribbon Status (" + paperRibbonStatusV + ") : Ribbon OK");
+                        break;
                     case "2" :
                         System.out.println("Paper Ribbon Status (" + paperRibbonStatusV + ") : Ribbon replacement recommended");
+                        break;
                     case "3" :
                         System.out.println("Paper Ribbon Status (" + paperRibbonStatusV + ") : Ribbon replacement mandatory");
+                        break;
                 }
                 switch (printHeadStatusV){
                     case "1" :
                         System.out.println("Print Head Status (" + printHeadStatusV + ") : Print-head OK");
+                        break;
                     case "2" :
                         System.out.println("Print Head Status (" + printHeadStatusV + ") : Print-head replacement recommended");
+                        break;
                     case "3" :
                         System.out.println("Print Head Status (" + printHeadStatusV+ ") : Print-head replacement mandatory");
+                        break;
                 }
                 switch (knifeStatusV){
                     case "1" :
                         System.out.println("Knife Status (" + knifeStatusV + ") : Knife OK");
+                        break;
                     case "2" :
                         System.out.println("Knife Status (" + knifeStatusV+ ") : Knife replacement recommended");
+                        break;
                     case "3" :
                         System.out.println("Knife Status (" + knifeStatusV + ") : Knife replacement mandatory");
+                        break;
                 }
                 switch (captureBinStatusV){
                     case "1" :
                         System.out.println("Capture Bin Status (" + captureBinStatusV + ") : Capture bin OK");
+                        break;
                     case "4" :
                         System.out.println("Capture Bin Status (" + captureBinStatusV + ") : Capture bin overfill");
+                        break;
                 }
+                break;
             case "a" :
                 System.out.println("Voice Guidance Status");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
@@ -947,14 +975,19 @@ public class NDCParser {
                 switch (errorSeverity){
                     case "0" :
                         System.out.println("Error Severity (" + errorSeverity + ") : No error");
+                        break;
                     case "1" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Routine error");
+                        break;
                     case "2" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Warning");
+                        break;
                     case "3" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Suspend");
+                        break;
                     case "4" :
                         System.out.println("Error Severity (" + errorSeverity + ") : Fatal");
+                        break;
                 }
                 String voiceDiagnosticStatus1 = diagnosticStatus.substring(0,2);
                 String voiceDiagnosticStatus2 = diagnosticStatus.substring(2,4);
@@ -963,24 +996,33 @@ public class NDCParser {
                 switch (voiceDiagnosticStatus1){
                     case "00" :
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus1 + ") : Audio card is inaccessible");
+                        break;
                     case "01" :
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus1 + ") : Audio card is accessible");
+                        break;
                 }
                 switch (voiceDiagnosticStatus2){
                     case "00" :
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : No audio jack is available");
+                        break;
                     case "01" :
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in manual mode and the public state. All audio messages are played through the speakers");
+                        break;
                     case "02":
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in automatic mode and the public state. When a headset is inserted, the audio messages are played through the audio jack; otherwise audio messages are played through the speakers.");
+                        break;
                     case "04":
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in semi-automatic mode and the public state. When a headset is inserted, the audio messages are played through the audio jack; otherwise audio messages are played through the speakers.");
+                        break;
                     case "08":
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in manual mode and the private state. All audio messages are played through the audio jack only, whether or not a headset is inserted.");
+                        break;
                     case "16":
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in automatic mode and the private state. When a headset is inserted, audio messages are played through the audio jack; when the headset is removed, the device enters the public state.");
+                        break;
                     case "32":
                         System.out.println("Diagnostic Status (" + voiceDiagnosticStatus2 + ") : The audio system is in semi-automatic mode and the private state. All audio messages are played through the audio jack; when the headset is removed, the audio system remains in the private state.");
+                        break;
                 }
                 switch (voiceDiagnosticStatus3){
                     case "00":
@@ -991,6 +1033,7 @@ public class NDCParser {
                         break;
                     case "02":
                         System.out.println("Audio Status (" + voiceDiagnosticStatus3 + ") : No headset is connected");
+                        break;
                 }
                 switch (voiceDiagnosticStatus4){
                     case "00":
@@ -998,7 +1041,9 @@ public class NDCParser {
                         break;
                     case "01":
                         System.out.println("Audio Status (" + voiceDiagnosticStatus4 + ") : The XML definition file is accessible");
+                        break;
                 }
+                break;
             case "w" :
                 System.out.println("Bunch Note Acceptor Status");
                 System.out.println("Device Identifier : " + deviceIdentifierGraphic); // Asumsikan deviceIdentifierGraphic berisi 'w'
@@ -1010,40 +1055,40 @@ public class NDCParser {
                 switch (e2_transactionDeviceStatusCode) {
                     case "0":
                         System.out.println(" Successful operation, but an exception has occurred or notes have been moved in the device outside a Transaction Reply function. Up to date counts are included, which will be in the escrow notes field (refundable deposits) or the vaulted notes field (direct deposits). In this case, both counts are cumulative within the transaction.");
-
+                        break;
                     case "1":
                         System.out.println(" Cancel selected, Refund selected or a time‐out occurs during the Cash Accept state. Note counts will be in the escrow notes field (refundable deposit) or the vaulted notes field (direct deposit). ");
-
+                        break;
                     case "2":
                         System.out.println("Not used");
-
+                        break;
                     case "3":
                         System.out.println("Error ‐ if counts are included, they are as accurate as the available information allows, except for notes left in escrow in the Close state when the note counts are accurate.");
-
+                        break;
                     case "4":
                         System.out.println(" Device inoperative ‐ notes are left at the exit slot; counts are included. Usually this is returned counts in the w4 message as notes are at the exit slot.");
-
+                        break;
                     case "5":
                         System.out.println("No notes in escrow when the Transaction Reply function attempts to vault escrowed notes or return cash, indicating an error at the host.");
-
+                        break;
                     case "6":
                         System.out.println("Notes detected at power-up.");
-
+                        break;
                     case "7":
                         System.out.println("Notes not taken, but retracted; counts are included in the Vaulted counts field.");
-
+                        break;
                     case "8":
                         System.out.println("Not supported");
-
+                        break;
                     case "?":
                         System.out.println("Counterfeit notes have been detected.");
                         break;
                     case "@":
                         System.out.println("Suspect notes have been detected.");
-
+                        break;
                     default:
                         System.out.println("Unknown Transaction/Device Status code for w: " + e2_transactionDeviceStatusCode);
-
+                        break;
                 }
 
 
@@ -1102,73 +1147,92 @@ public class NDCParser {
                         switch (suppliesCode) {
                             case '0':
                                 System.out.print("[No change] ");
-
+                                break;
                             case '1':
                                 System.out.print("[Good state] ");
-
+                                break;
                             case '2':
                                 System.out.print("[Bin out (missing or removed)] ");
-
+                                break;
                             case '3':
                                 System.out.print("[Media high (nearly full)] ");
-
+                                break;
                             case '4':
                                 System.out.print("[Media full (overfull)] ");
-
+                                break;
                             default:
                                 System.out.print("[Unknown supplies code: " + suppliesCode + "] ");
-
+                                break;
                         }
                     }
                     System.out.println();
                 }
+                break;
             case "\\" :
                 System.out.println("Envelope Identifier Graphic");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
                 switch (StatusInformationField[0].substring(1,2)){
                     case "0" :
                         System.out.println("Device Status (" + StatusInformationField[0].substring(0,1) + ") : Envelope presented satisfactorily");
+                        break;
                     case "1" :
                         System.out.println("Device Status (" + StatusInformationField[0].substring(0,1) + ") : Failure - envelope not presented or retracted");
+                        break;
                 }
                 switch (StatusInformationField[1]){
                     case "0" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : No error/not supported");
+                        break;
                     case "1" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : Routine error");
+                        break;
                     case "2" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : Warning");
+                        break;
                     case "3" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : Suspend");
+                        break;
                     case "4" :
                         System.out.println("Error Severity (" + StatusInformationField[1] + ") : Fatal");
+                        break;
                 }
                 System.out.println("Diagnostic Status : " + StatusInformationField[2]);
                 switch (suppliesStatus){
                     case "1" :
                         System.out.println("Supplies Status (" + suppliesStatus + ") : Sufficient envelopes");
+                        break;
                     case "2" :
                         System.out.println("Supplies Status (" + suppliesStatus + ") : Envelopes low");
+                        break;
                     case "3" :
                         System.out.println("Supplies Status (" + suppliesStatus + ") : Envelopes exhausted");
+                        break;
                 }
+                break;
             case "Y" :
                 System.out.println("Coin Dispenser Status");
                 System.out.println("Device Identifier Graphic : " + deviceIdentifierGraphic);
                 switch (deviceStatus){
                     case "0" :
                         System.out.println(deviceStatus + " : Successful operation, but an exception has occurred, described in the Diagnostic Status field");
+                        break;
                     case "1" :
                         System.out.println(deviceStatus + " : The coin dispenser low threshold for each coin hopper were not set during the configuration of the SST. No coins have been dispensed");
+                        break;
                     case "3" :
                         System.out.println(deviceStatus + " : The coin dispense has not started as the requested hopper is");
+                        break;
                     case "4" :
                         System.out.println(deviceStatus + " : Coins dispensed unknown. The cardholder may have had access to any presented coins, so it should be assumed some may have been dispensed. Intervention may be required to reconcile the cash amount totals. The following counts contain requested dispense values.");
+                        break;
                     case "9" :
                         System.out.println(deviceStatus + " : No coins dispensed or card not ejected. This status is returned on a card before cash transaction if the stack operation fails and the coins are purged prior to card eject.");
+                        break;
                     case ":" :
                         System.out.println(deviceStatus + " : Some coins have been retracted when the coins were not taken following a Present time‐out. The number of coins retracted is unknown");
+                        break;
                 }
+                break;
         }
     }
 
